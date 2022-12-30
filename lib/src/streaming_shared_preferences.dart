@@ -59,7 +59,7 @@ class StreamingSharedPreferences {
     return _getValue(
       // ignore: invalid_use_of_internal_member
       Preference.$$_getKeysKey,
-      defaultValue: Set(),
+      defaultValue: <String>{},
       adapter: _GetKeysAdapter.instance,
     );
   }
@@ -70,7 +70,7 @@ class StreamingSharedPreferences {
   /// If the value is null, starts with the value provided in [defaultValue]. When
   /// the value transitions from non-null to null (ie. when the value is removed),
   /// emits [defaultValue].
-  Preference<bool> getBool(String key, {required bool defaultValue}) {
+  Preference<bool?> getBool(String key, {bool? defaultValue}) {
     return getCustomValue(
       key,
       defaultValue: defaultValue,
@@ -84,7 +84,7 @@ class StreamingSharedPreferences {
   /// If the value is null, starts with the value provided in [defaultValue]. When
   /// the value transitions from non-null to null (ie. when the value is removed),
   /// emits [defaultValue].
-  Preference<int> getInt(String key, {required int defaultValue}) {
+  Preference<int?> getInt(String key, {int? defaultValue}) {
     return getCustomValue(
       key,
       defaultValue: defaultValue,
@@ -98,7 +98,7 @@ class StreamingSharedPreferences {
   /// If the value is null, starts with the value provided in [defaultValue]. When
   /// the value transitions from non-null to null (ie. when the value is removed),
   /// emits [defaultValue].
-  Preference<double> getDouble(String key, {required double defaultValue}) {
+  Preference<double?> getDouble(String key, {double? defaultValue}) {
     return getCustomValue(
       key,
       defaultValue: defaultValue,
@@ -112,7 +112,7 @@ class StreamingSharedPreferences {
   /// If the value is null, starts with the value provided in [defaultValue]. When
   /// the value transitions from non-null to null (ie. when the value is removed),
   /// emits [defaultValue].
-  Preference<String> getString(String key, {required String defaultValue}) {
+  Preference<String?> getString(String key, {String? defaultValue}) {
     return getCustomValue(
       key,
       defaultValue: defaultValue,
@@ -126,9 +126,9 @@ class StreamingSharedPreferences {
   /// If the value is null, starts with the value provided in [defaultValue]. When
   /// the value transitions from non-null to null (ie. when the value is removed),
   /// emits [defaultValue].
-  Preference<List<String>> getStringList(
+  Preference<List<String>?> getStringList(
     String key, {
-    required List<String> defaultValue,
+    List<String>? defaultValue,
   }) {
     return getCustomValue(
       key,
@@ -153,7 +153,7 @@ class StreamingSharedPreferences {
   /// emits [defaultValue].
   Preference<T> getCustomValue<T>(
     String key, {
-    required T defaultValue,
+    T? defaultValue,
     required PreferenceAdapter<T> adapter,
   }) {
     assert(
@@ -271,7 +271,7 @@ class StreamingSharedPreferences {
 
   Preference<T> _getValue<T>(
     String key, {
-    required T defaultValue,
+    T? defaultValue,
     required PreferenceAdapter<T> adapter,
   }) {
     // ignore: invalid_use_of_visible_for_testing_member

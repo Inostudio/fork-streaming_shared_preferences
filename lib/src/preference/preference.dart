@@ -16,7 +16,7 @@ import '../adapters/preference_adapter.dart';
 /// Whenever the backing value associated with [key] transitions from non-null to
 /// null, it emits [defaultValue]. The [defaultValue] is also emitted if the value
 /// is null when initially listening to the stream.
-class Preference<T> extends StreamView<T> {
+class Preference<T> extends StreamView<T?> {
   /// Only exposed for internal purposes. Do not call directly.
   @visibleForTesting
   Preference.$$_private(
@@ -38,7 +38,7 @@ class Preference<T> extends StreamView<T> {
   /// Get the latest value from the persistent storage synchronously.
   ///
   /// If the returned value doesn't exist (=is `null`), returns [defaultValue].
-  T getValue() => _adapter.getValue(_preferences, key) ?? defaultValue;
+  T? getValue() => _adapter.getValue(_preferences, key) ?? defaultValue;
 
   /// Update the value and notify all listeners about the new value.
   ///
@@ -92,7 +92,7 @@ class Preference<T> extends StreamView<T> {
 
   /// The fallback value to emit when there's no stored value associated
   /// with the [key].
-  final T defaultValue;
+  final T? defaultValue;
 
   // Private fields to not clutter autocompletion results for this class.
   final SharedPreferences _preferences;
@@ -112,7 +112,7 @@ class Preference<T> extends StreamView<T> {
 
 // A [StreamTransformer] that starts with the current persisted value and emits
 // a new one whenever the [key] has update events.
-class _EmitValueChanges<T> extends StreamTransformerBase<String, T> {
+class _EmitValueChanges<T> extends StreamTransformerBase<String, T?> {
   _EmitValueChanges(
     this.key,
     this.defaultValue,
@@ -121,23 +121,23 @@ class _EmitValueChanges<T> extends StreamTransformerBase<String, T> {
   );
 
   final String key;
-  final T defaultValue;
+  final T? defaultValue;
   final PreferenceAdapter<T> valueAdapter;
   final SharedPreferences preferences;
 
-  T _getValueFromPersistentStorage() {
+  T? _getValueFromPersistentStorage() {
     // Return the latest value from preferences,
     // If null, returns the default value.
     return valueAdapter.getValue(preferences, key) ?? defaultValue;
   }
 
   @override
-  Stream<T> bind(Stream<String> stream) {
-    return StreamTransformer<String, T>((input, cancelOnError) {
-      late final StreamController<T> controller;
-      late final StreamSubscription<T> subscription;
+  Stream<T?> bind(Stream<String> stream) {
+    return StreamTransformer<String, T?>((input, cancelOnError) {
+      late final StreamController<T?> controller;
+      late final StreamSubscription<T?> subscription;
 
-      controller = StreamController<T>(
+      controller = StreamController<T?>(
         sync: true,
         onListen: () {
           // When the stream is listened to, start with the current persisted
@@ -147,7 +147,7 @@ class _EmitValueChanges<T> extends StreamTransformerBase<String, T> {
 
           // Cache the last value. Caching is specific for each listener, so the
           // cached value exists inside the onListen() callback for a reason.
-          T lastValue = value;
+          T? lastValue = value;
 
           // Whenever a key has been updated, fetch the current persisted value
           // and emit it.

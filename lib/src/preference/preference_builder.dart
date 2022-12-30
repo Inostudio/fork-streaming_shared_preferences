@@ -35,8 +35,8 @@ class PreferenceBuilder<T> extends StatefulWidget {
 }
 
 class _PreferenceBuilderState<T> extends State<PreferenceBuilder<T>> {
-  late final T _initialData;
-  late final Stream<T> _preference;
+  late final T? _initialData;
+  late final Stream<T?> _preference;
 
   @override
   void initState() {
@@ -48,7 +48,7 @@ class _PreferenceBuilderState<T> extends State<PreferenceBuilder<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<T>(
+    return StreamBuilder<T?>(
       initialData: _initialData,
       stream: _preference,
       builder: (context, snapshot) => widget.builder(context, snapshot.data!),
